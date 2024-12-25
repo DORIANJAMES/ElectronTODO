@@ -1,0 +1,21 @@
+{
+  "name": "electron-todo",
+  "version": "1.0.0",
+  "description": "TODO Native Application",
+  "keywords": [
+    "TODO",
+    "Electron"
+  ],
+  "license": "ISC",
+  "author": "Dorian JAMES",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "electron": "^33.2.1",
+    "feather-icons": "^4.29.2"
+  }
+}

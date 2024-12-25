@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO List - Electron | DORIAN Software Solutions</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<div class="container main-container pt-5">
+    <h3 class="text-center">Electron.js ile TODO App | DORIAN Software Solutions</h3>
+    <div class="row">
+        <div class="col-md-6 offset-3 mt-5 d-flex">
+            <input type="text" class="form-control form-control-lg mr-1">
+            <button class="btn btn-outline-dark">Ekle</button>
+        </div>
+    </div>
+    <h3 class="text-center mt-5 mb3">Yapılacaklar Listesi</h3>
+    <div class="todo-container container">
+        <div class="alert-container row">
+            <div class="alert alert-warning col-md-8 offset-2">
+                Herhangi Bir TODO Bulunmamaktadır!!!
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../node_modules/feather-icons/dist/feather.js"></script>
+<script src="../assets/js/mainWindow.js"></script>
+<script>
+    feather.replace();
+</script>
+</body>
+</html>
