@@ -1,6 +1,7 @@
 const electron = require('electron');
 const {ipcRenderer} = electron
 
+CheckToDoCount();
 ipcRenderer.on('todo:addItem', (e, todo) => {
 // to-do Container
     const todoContainer = document.querySelector(".todo-container")
@@ -23,7 +24,7 @@ ipcRenderer.on('todo:addItem', (e, todo) => {
     const buttonEdit = document.createElement("button")
     buttonEdit.className = "btn btn-sm btn-outline-warning flex-shrink-1 margin-r-5"
     buttonEdit.addEventListener("click", () => {
-        if (confirm("Bu kaydı değiştirmek istediğinizden emin misiniz?")){
+        if (confirm("Bu kaydı değiştirmek istediğinizden emin misiniz?")) {
             // TODO: Edit işlemi.
         }
     })
@@ -33,12 +34,17 @@ ipcRenderer.on('todo:addItem', (e, todo) => {
 
     const iDelete = document.createElement('i')
     iDelete.setAttribute("data-feather", "delete")
+    iDelete.style.zIndex = "-1"
+    iDelete.style.position = "relative"
 
     const buttonDelete = document.createElement("button")
     buttonDelete.className = "btn btn-sm btn-outline-danger flex-shrink-1"
-    buttonDelete.addEventListener("click", () => {
-        if (confirm("Bu kaydı silmek istediğinizden emin misiniz?")){
-            // TODO: Edit işlemi.
+    buttonDelete.style.zIndex = "0"
+    buttonDelete.style.position = "relative"
+    buttonDelete.addEventListener("click", (e) => {
+        if (confirm("Bu kaydı silmek istediğinizden emin misiniz?")) {
+            let deleteParent = e.target.parentNode.parentNode;
+            deleteParent.remove();
         }
     })
 
@@ -52,5 +58,25 @@ ipcRenderer.on('todo:addItem', (e, todo) => {
     row.appendChild(col);
 
     todoContainer.appendChild(row)
+    feather.replace();
+    CheckToDoCount();
 })
+
+let mainValue = document.querySelector("#main-input-value")
+let mainAddButton = document.querySelector("#main-add-button")
+
+mainAddButton.addEventListener("click", (e) => {
+    ipcRenderer.send("newTodo:save", mainValue.value);
+    mainValue.value = "";
+})
+
+function CheckToDoCount() {
+    const container = document.querySelector(".todo-container")
+    const alert = document.querySelector(".alert-container")
+    if (container.children.length !== 0) {
+        alert.style.display = "none"
+    } else {
+        alert.style.display = "block"
+    }
+}
 

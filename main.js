@@ -48,10 +48,15 @@ app.on("ready", () => {
             );
             mainWindow.webContents.send("todo:addItem", todo);
 
-            yeniToDo.close();
-            yeniToDo = null;
+            if (yeniToDo != null) {
+                yeniToDo.close();
+                yeniToDo = null;
+            }
+
         }
     })
+
+    ipcMain.on
 })
 
 const mainMenuTemplate = [
