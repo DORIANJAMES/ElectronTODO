@@ -7,7 +7,7 @@ let editValue = document.querySelector('#editTodoValue');
 let editSpan = document.querySelector('#editSpan');
 
 ipcRenderer.on("editTodo:editItemOnModal",(err, data)=>{
-    editValue.innerText = data.text
+    editValue.value = data.text
     editSpan.innerText = data.text
     console.log(data)
 })

@@ -45,7 +45,6 @@ app.on("ready", () => {
             }
             //editToDoWindow.webContents.send("editTodo:editItemOnModal", editTodo)
             EditToDo(editTodo)
-            console.log(data)
         }
     })
 
@@ -204,7 +203,11 @@ function EditToDo(data) {
     })
 
     if (data !== null && data !== undefined) {
-        editToDoWindow.webContents.send('editTodo:editItemOnModal', data)
+        console.log(data)
+        editToDoWindow.webContents.once("dom-ready", ()=>{
+            editToDoWindow.webContents.send('editTodo:editItemOnModal', data)
+        })
+
     }
 
     editToDoWindow.loadURL(url.format(({
