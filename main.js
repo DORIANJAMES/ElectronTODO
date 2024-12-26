@@ -4,7 +4,7 @@ const url = require("url");
 
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
-let mainWindow, yeniToDo;
+let mainWindow, newToDo, editToDoWindow;
 let todoList = []
 
 app.on("ready", () => {
@@ -33,13 +33,38 @@ app.on("ready", () => {
     })
 
     ipcMain.on("newTodo:close", () => {
-        yeniToDo.close();
-        yeniToDo = null;
+        newToDo.close();
+        newToDo = null;
+    })
+
+    ipcMain.on("editTodo:editWindow", (err, data) => {
+        if (data) {
+            editTodo = {
+                id: data.id,
+                text: data.text,
+            }
+            //editToDoWindow.webContents.send("editTodo:editItemOnModal", editTodo)
+            EditToDo(editTodo)
+            console.log(data)
+        }
+    })
+
+    ipcMain.on("editTodo:close", () => {
+        editToDoWindow.close()
+        editToDoWindow = null
+    })
+
+    ipcMain.on("editTodo:save", (err, data) => {
+
+    })
+
+    ipcMain.on("quitApp", () => {
+        app.quit();
     })
 
     ipcMain.on("newTodo:save", (err, data) => {
         if (data) {
-            todo={
+            todo = {
                 id: todoList.length + 1,
                 text: data
             }
@@ -48,15 +73,13 @@ app.on("ready", () => {
             );
             mainWindow.webContents.send("todo:addItem", todo);
 
-            if (yeniToDo != null) {
-                yeniToDo.close();
-                yeniToDo = null;
+            if (newToDo != null) {
+                newToDo.close();
+                newToDo = null;
             }
 
         }
     })
-
-    ipcMain.on
 })
 
 const mainMenuTemplate = [
@@ -140,20 +163,16 @@ if (process.env.NODE_ENV !== "production") {
                         focusedWindow.toggleDevTools();
                     }
                 },
-                {
-                    label: "Yenile",
-                    role: "reload"
-                }
-            ]
+             ]
         }
     )
 }
 
 function YeniToDoGirisi() {
-    yeniToDo = new BrowserWindow({
+    newToDo = new BrowserWindow({
         width: 480,
         height: 175,
-        title: "Yeni TODO Girişi",
+        title: "New TODO",
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -161,16 +180,46 @@ function YeniToDoGirisi() {
         frame: false,
     })
 
-    yeniToDo.loadURL(url.format(({
-        pathname: path.join(__dirname, "pages/yeniToDoWindow.html"),
+    newToDo.loadURL(url.format(({
+        pathname: path.join(__dirname, "pages/newToDoWindow.html"),
         protocol: "file:",
         slashes: true,
     })))
 
-    yeniToDo.on("close", () => {
-        yeniToDo = null
+    newToDo.on("close", () => {
+        newToDo = null
     })
 }
+
+function EditToDo(data) {
+    editToDoWindow = new BrowserWindow({
+        width: 481,
+        height: 178,
+        title: "Edit TODO",
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+        frame: false,
+    })
+
+    if (data !== null && data !== undefined) {
+        editToDoWindow.webContents.send('editTodo:editItemOnModal', data)
+    }
+
+    editToDoWindow.loadURL(url.format(({
+        pathname: path.join(__dirname, "pages/editToDoWindow.html"),
+        protocol: "file:",
+        slashes: true,
+    })))
+
+
+    editToDoWindow.on("close", () => {
+        editToDoWindow = null
+    })
+}
+
+// TODO Edit action will be completed.
 
 function GetToDoList() {
     console.log(todoList)

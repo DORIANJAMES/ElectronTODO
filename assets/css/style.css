@@ -20,3 +20,19 @@ body {
 .margin-r-5 {
     margin-right: 5px;
 }
+
+.close-button{
+    text-decoration: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    z-index: 3;
+    top: 10px;
+    left: 10px;
+}
+
+.close-button:hover{
+    background-color: green;
+}

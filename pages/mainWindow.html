@@ -2,37 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TODO List - Electron | DORIAN Software Solutions</title>
+    <title>TODO App | DORIAN Software Solutions</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 
-<div class="container main-container pt-5">
-    <h3 class="text-center">Electron.js ile TODO App | DORIAN Software Solutions</h3>
-    <div class="row">
-        <div class="col-md-6 offset-3 mt-5 d-flex">
-            <input type="text" class="form-control form-control-lg mr-1" id="main-input-value">
-            <button class="btn btn-outline-dark" id="main-add-button">Ekle</button>
-        </div>
+<nav class="navbar navbar-dark bg-dark d-flex justify-content-between align-items-center fixed-top">
+    <div class="col-md-5 d-flex align-items-center">
+        <a class="close-button" id="close-app-button"></a>
+        <a class="navbar-brand m-2 text-white" style="margin-left: 10px; z-index: 0; position: relative">TODO List | DORIAN Software Solutions</a>
     </div>
-    <h3 class="text-center mt-5 mb3">Yapılacaklar Listesi</h3>
+    <div class="col-md-6 d-flex m-2">
+        <input type="text" class="form-control form-control-lg" style="margin-right: 5px!important;"
+               id="main-input-value">
+        <button class="btn btn-outline-success" style="margin-right: 5px" id="main-add-button">Add</button>
+    </div>
+</nav>
+
+<div class="container main-container" style="margin-top: 90px;">
     <div class="todo-container container"></div>
     <div class="alert-container row">
         <div class="alert alert-warning col-md-8 offset-2">
-            Herhangi Bir TODO Bulunmamaktadır!!!
+            There is no any job to do.
         </div>
     </div>
-
-
 </div>
 
+<nav class="navbar navbar-light bg-light fixed-bottom">
+    <span style="margin-left: 10px">Toplam Kayıt Sayısı: <b id="totalCountContainer"></b></span>
+</nav>
 
 <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../node_modules/feather-icons/dist/feather.js"></script>
 <script src="../assets/js/mainWindow.js"></script>
 <script>
-    feather.replace();
+    const feather = require("feather-icons");
+    feather.replace(
+        {
+            width: 12,
+            height: 12,
+            strokeLinecap: "round",
+            stroke: "white",
+            fill: "red"
+        }
+    );
 </script>
 </body>
 </html>
