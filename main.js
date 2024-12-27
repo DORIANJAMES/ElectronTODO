@@ -1,7 +1,9 @@
+require("dotenv").config();
 const electron = require("electron");
 const path = require("path");
 const url = require("url");
 const feather = require("feather-icons");
+const db=require("./lib/connection").db;
 
 const {app, BrowserWindow, Menu, ipcMain, dialog} = electron;
 
@@ -110,6 +112,12 @@ app.on("ready", () => {
             }
 
         }
+    })
+
+    mainWindow.webContents.once("dom-ready", ()=>{
+        db.query("SELECT * from todos", (err, results, fields) => {
+            console.log(results);
+        })
     })
 })
 

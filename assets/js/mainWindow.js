@@ -64,15 +64,7 @@ ipcRenderer.on('todo:addItem', (e, todo) => {
     buttonDelete.addEventListener("click", (e) => {
         let deleteParent = e.target.parentNode.parentNode;
         let deleteParentID = deleteParent.getAttribute("id")
-
         ipcRenderer.send("showMessage", deleteParentID)
-
-
-        /*if (confirm("Bu kaydı silmek istediğinizden emin misiniz?")) {
-            let deleteParent = e.target.parentNode.parentNode;
-            deleteParent.remove();
-            CheckToDoCount()
-        }*/
     })
 
     buttonEdit.appendChild(iEdit);

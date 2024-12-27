@@ -1,5 +1,5 @@
 {
-  "name": "electron-todo",
+  "name": "DODO",
   "version": "1.0.0",
   "description": "TODO Native Application",
   "keywords": [
@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.7",
     "electron": "^33.2.1",
-    "feather-icons": "^4.29.2"
+    "feather-icons": "^4.29.2",
+    "mysql": "^2.18.1"
   }
 }

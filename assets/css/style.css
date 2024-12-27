@@ -34,7 +34,7 @@ body {
 }
 
 .close-button:hover{
-    background-color: green;
+    background-color: grey;
 }
 
 .minimize-button {
@@ -49,6 +49,10 @@ body {
     left: 30px;
 }
 
+.minimize-button:hover{
+    background-color: grey;
+}
+
 .maximize-button {
     text-decoration: none;
     height: 12px;
@@ -59,4 +63,8 @@ body {
     z-index: 3;
     top: 10px;
     left: 50px;
+}
+
+.maximize-button:hover{
+    background-color: grey;
 }
