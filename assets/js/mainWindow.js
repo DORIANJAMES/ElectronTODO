@@ -1,5 +1,6 @@
 const electron = require('electron');
-const {ipcRenderer} = electron
+const path = require("path");
+const {ipcRenderer, dialog} = electron
 
 let closeAppButton = document.querySelector('#close-app-button');
 let minimizeAppButton = document.querySelector('#minimize-app-button');
@@ -13,7 +14,7 @@ ipcRenderer.on('todo:addItem', (e, todo) => {
 //row
     const row = document.createElement("div")
     row.className = "row"
-    row.setAttribute("id", todo.id)
+    row.setAttribute("id", "itemID:" + todo.id)
 
 //col
     const col = document.createElement("div")
@@ -61,11 +62,17 @@ ipcRenderer.on('todo:addItem', (e, todo) => {
     buttonDelete.style.zIndex = "0"
     buttonDelete.style.position = "relative"
     buttonDelete.addEventListener("click", (e) => {
-        if (confirm("Bu kaydı silmek istediğinizden emin misiniz?")) {
+        let deleteParent = e.target.parentNode.parentNode;
+        let deleteParentID = deleteParent.getAttribute("id")
+
+        ipcRenderer.send("showMessage", deleteParentID)
+
+
+        /*if (confirm("Bu kaydı silmek istediğinizden emin misiniz?")) {
             let deleteParent = e.target.parentNode.parentNode;
             deleteParent.remove();
             CheckToDoCount()
-        }
+        }*/
     })
 
     buttonEdit.appendChild(iEdit);
@@ -94,6 +101,14 @@ ipcRenderer.on("editTodo:save", (err, data) => {
     }
 })
 
+ipcRenderer.on("deleteMessageOK", (err, data) => {
+    console.log(data)
+    let deleteParent = document.getElementById(data);
+    console.log(deleteParent);
+    deleteParent.remove();
+    CheckToDoCount()
+})
+
 let mainValue = document.querySelector("#main-input-value")
 let mainAddButton = document.querySelector("#main-add-button")
 
@@ -107,11 +122,11 @@ closeAppButton.addEventListener("click", () => {
     ipcRenderer.send("quitApp")
 })
 
-minimizeAppButton.addEventListener("click", ()=>{
+minimizeAppButton.addEventListener("click", () => {
     ipcRenderer.send("minimizeApp")
 })
 
-maximizeAppButton.addEventListener("click", ()=>{
+maximizeAppButton.addEventListener("click", () => {
     ipcRenderer.send("maximizeApp")
 })
 

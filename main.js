@@ -1,8 +1,9 @@
 const electron = require("electron");
 const path = require("path");
 const url = require("url");
+const feather = require("feather-icons");
 
-const {app, BrowserWindow, Menu, ipcMain} = electron;
+const {app, BrowserWindow, Menu, ipcMain, dialog} = electron;
 
 let mainWindow, newToDo, editToDoWindow, initialWidth, initialHeight;
 let todoList = []
@@ -31,6 +32,23 @@ app.on("ready", () => {
 
     mainWindow.on("close", () => {
         app.quit();
+    })
+
+    ipcMain.on("showMessage", (err, data) => {
+        dialog. showMessageBox(mainWindow,{
+            type: "question",
+            title: "Onayınız Gereklidir!",
+            message: "Bu kaydı silmek istediğinizden emin misiniz?",
+            icon: path.join(__dirname, "assets/img/100x100-icon.png"),
+            buttons: ['Hayır', 'Evet'],
+            defaultId: 1,
+            cancelId: 0
+        }).then(result => {
+            if (result.response === 1) {
+                mainWindow.webContents.send("deleteMessageOK", data)
+            }
+        }).catch(err => console.log(err));
+
     })
 
     ipcMain.on("newTodo:close", () => {
