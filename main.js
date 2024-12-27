@@ -116,7 +116,7 @@ app.on("ready", () => {
 
     mainWindow.webContents.once("dom-ready", ()=>{
         db.query("SELECT * from todos", (err, results, fields) => {
-            console.log(results);
+            mainWindow.webContents.send("initApp", results)
         })
     })
 })
@@ -171,7 +171,7 @@ const mainMenuTemplate = [
             {
                 label: "Yeni TODO Penceresi",
                 click(item, focusedWindow) {
-                    YeniToDoGirisi();
+                    YeniToDoGirisi(1)
                 }
             },
             {
@@ -207,7 +207,9 @@ if (process.env.NODE_ENV !== "production") {
     )
 }
 
-function YeniToDoGirisi() {
+
+
+const YeniToDoGirisi = ({id}) => {
     newToDo = new BrowserWindow({
         width: 480,
         height: 175,

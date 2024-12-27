@@ -6,6 +6,10 @@ let closeAppButton = document.querySelector('#close-app-button');
 let minimizeAppButton = document.querySelector('#minimize-app-button');
 let maximizeAppButton = document.querySelector('#maximize-app-button');
 
+ipcRenderer.on("initApp", (err, todos) => {
+
+})
+
 CheckToDoCount();
 ipcRenderer.on('todo:addItem', (e, todo) => {
 // to-do Container
