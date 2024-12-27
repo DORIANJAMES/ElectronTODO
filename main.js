@@ -4,7 +4,7 @@ const url = require("url");
 
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
-let mainWindow, newToDo, editToDoWindow;
+let mainWindow, newToDo, editToDoWindow, initialWidth, initialHeight;
 let todoList = []
 
 app.on("ready", () => {
@@ -23,7 +23,8 @@ app.on("ready", () => {
         slashes: true,
     }))
 
-    console.log(process.platform);
+    initialWidth = mainWindow.getBounds().width;
+    initialHeight = mainWindow.getBounds().height;
 
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
     Menu.setApplicationMenu(mainMenu)
@@ -59,6 +60,19 @@ app.on("ready", () => {
 
     ipcMain.on("quitApp", () => {
         app.quit();
+    })
+
+    ipcMain.on("minimizeApp", () => {
+        mainWindow.minimize();
+    })
+
+    ipcMain.on("maximizeApp", () => {
+        console.log(mainWindow.isMaximized())
+        if (mainWindow.isMaximized()===false) {
+            mainWindow.maximize();
+        } else {
+            mainWindow.setSize(initialWidth, initialHeight,true);
+        }
     })
 
     ipcMain.on("newTodo:save", (err, data) => {

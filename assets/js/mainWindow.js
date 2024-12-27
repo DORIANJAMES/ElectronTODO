@@ -2,6 +2,8 @@ const electron = require('electron');
 const {ipcRenderer} = electron
 
 let closeAppButton = document.querySelector('#close-app-button');
+let minimizeAppButton = document.querySelector('#minimize-app-button');
+let maximizeAppButton = document.querySelector('#maximize-app-button');
 
 CheckToDoCount();
 ipcRenderer.on('todo:addItem', (e, todo) => {
@@ -103,6 +105,14 @@ mainAddButton.addEventListener("click", (e) => {
 
 closeAppButton.addEventListener("click", () => {
     ipcRenderer.send("quitApp")
+})
+
+minimizeAppButton.addEventListener("click", ()=>{
+    ipcRenderer.send("minimizeApp")
+})
+
+maximizeAppButton.addEventListener("click", ()=>{
+    ipcRenderer.send("maximizeApp")
 })
 
 mainValue.addEventListener("keydown", (e) => {

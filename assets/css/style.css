@@ -36,3 +36,27 @@ body {
 .close-button:hover{
     background-color: green;
 }
+
+.minimize-button {
+    text-decoration: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: orange;
+    position: absolute;
+    z-index: 3;
+    top: 10px;
+    left: 30px;
+}
+
+.maximize-button {
+    text-decoration: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: green;
+    position: absolute;
+    z-index: 3;
+    top: 10px;
+    left: 50px;
+}
