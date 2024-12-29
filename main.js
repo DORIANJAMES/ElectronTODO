@@ -3,7 +3,7 @@ const electron = require("electron");
 const path = require("path");
 const url = require("url");
 const feather = require("feather-icons");
-const db=require("./lib/connection").db;
+const db = require("./lib/connection").db;
 
 const {app, BrowserWindow, Menu, ipcMain, dialog} = electron;
 
@@ -36,8 +36,17 @@ app.on("ready", () => {
         app.quit();
     })
 
+    ipcMain.on("todo:removeFromDb", (err, data) => {
+
+        db.query("DELETE FROM todos where id = ?", data, (err, result, fields) => {
+            if (result.affectedRows > 0) {
+                console.log("Bir adet kayıt silinmiştir. ");
+            }
+        })
+    })
+
     ipcMain.on("showMessage", (err, data) => {
-        dialog. showMessageBox(mainWindow,{
+        dialog.showMessageBox(mainWindow, {
             type: "question",
             title: "Onayınız Gereklidir!",
             message: "Bu kaydı silmek istediğinizden emin misiniz?",
@@ -88,23 +97,24 @@ app.on("ready", () => {
 
     ipcMain.on("maximizeApp", () => {
         console.log(mainWindow.isMaximized())
-        if (mainWindow.isMaximized()===false) {
+        if (mainWindow.isMaximized() === false) {
             mainWindow.maximize();
         } else {
-            mainWindow.setSize(initialWidth, initialHeight,true);
+            mainWindow.setSize(initialWidth, initialHeight, true);
         }
     })
 
     ipcMain.on("newTodo:save", (err, data) => {
         if (data) {
-            todo = {
-                id: todoList.length + 1,
-                text: data
-            }
-            todoList.push(
-                todo
-            );
-            mainWindow.webContents.send("todo:addItem", todo);
+            db.query("INSERT INTO todos SET text = ?", data, (err, result, fields) => {
+                if (result.affectedRows > 0) {
+                    mainWindow.webContents.send("todo:addItem", {
+                        id : result.insertId,
+                        text: data,
+                    });
+                }
+            })
+
 
             if (newToDo != null) {
                 newToDo.close();
@@ -114,11 +124,10 @@ app.on("ready", () => {
         }
     })
 
-    mainWindow.webContents.once("dom-ready", ()=>{
-        db.query("SELECT * from todos", (err, results, fields) => {
-            mainWindow.webContents.send("initApp", results)
-        })
+    mainWindow.webContents.on("dom-ready", () => {
+        FetchDODOListFromDb("initApp")
     })
+
 })
 
 const mainMenuTemplate = [
@@ -179,16 +188,18 @@ const mainMenuTemplate = [
             },
             {
                 label: "Geri Al"
-            }
+            },
         ]
     }
 ]
 
 if (process.platform === "darwin") {
-    mainMenuTemplate.unshift({
-        label: app.name,
-        role: "TODO"
-    })
+    mainMenuTemplate.unshift(
+        {
+            label: app.name,
+            role: "quit"
+        }
+    )
 }
 
 if (process.env.NODE_ENV !== "production") {
@@ -202,14 +213,17 @@ if (process.env.NODE_ENV !== "production") {
                         focusedWindow.toggleDevTools();
                     }
                 },
-             ]
+            ]
         }
     )
 }
 
-
-
-const YeniToDoGirisi = ({id}) => {
+const FetchDODOListFromDb = (channel) => {
+    db.query("SELECT * from todos", (err, results, fields) => {
+        mainWindow.webContents.send(channel, results)
+    })
+}
+const YeniToDoGirisi = () => {
     newToDo = new BrowserWindow({
         width: 480,
         height: 175,
@@ -246,7 +260,7 @@ function EditToDo(data) {
 
     if (data !== null && data !== undefined) {
         console.log(data)
-        editToDoWindow.webContents.once("dom-ready", ()=>{
+        editToDoWindow.webContents.once("dom-ready", () => {
             editToDoWindow.webContents.send('editTodo:editItemOnModal', data)
         })
 
