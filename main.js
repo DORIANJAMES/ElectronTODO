@@ -84,7 +84,8 @@ app.on("ready", () => {
     })
 
     ipcMain.on("editTodo:save", (err, data) => {
-
+        UpdateDODOListOnDb(data);
+        FetchDODOListFromDb("initApp")
     })
 
     ipcMain.on("quitApp", () => {
@@ -109,7 +110,7 @@ app.on("ready", () => {
             db.query("INSERT INTO todos SET text = ?", data, (err, result, fields) => {
                 if (result.affectedRows > 0) {
                     mainWindow.webContents.send("todo:addItem", {
-                        id : result.insertId,
+                        id: result.insertId,
                         text: data,
                     });
                 }
@@ -180,7 +181,7 @@ const mainMenuTemplate = [
             {
                 label: "Yeni TODO Penceresi",
                 click(item, focusedWindow) {
-                    YeniToDoGirisi(1)
+                    NewTODOEnterance(1)
                 }
             },
             {
@@ -218,12 +219,20 @@ if (process.env.NODE_ENV !== "production") {
     )
 }
 
+const UpdateDODOListOnDb = (data) => {
+    let id=data.id
+    let text = data.text
+    db.query("UPDATE todos SET text = ? WHERE id = ?", [text, id], (error, results, fields) => {
+        console.log(results)
+    })
+}
+
 const FetchDODOListFromDb = (channel) => {
     db.query("SELECT * from todos", (err, results, fields) => {
         mainWindow.webContents.send(channel, results)
     })
 }
-const YeniToDoGirisi = () => {
+const NewTODOEnterance = () => {
     newToDo = new BrowserWindow({
         width: 480,
         height: 175,
@@ -272,14 +281,15 @@ function EditToDo(data) {
         slashes: true,
     })))
 
-
     editToDoWindow.on("close", () => {
         editToDoWindow = null
     })
-}
 
-// TODO Edit action will be completed.
+    editToDoWindow.webContents.on('before-input-event', (event, input) => {
+        if (input.key === "Escape" && editToDoWindow !== null) {
+            editToDoWindow.close();
+            editToDoWindow = null
+        }
+    })
 
-function GetToDoList() {
-    console.log(todoList)
 }

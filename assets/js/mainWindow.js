@@ -6,10 +6,10 @@ let closeAppButton = document.querySelector('#close-app-button');
 let minimizeAppButton = document.querySelector('#minimize-app-button');
 let maximizeAppButton = document.querySelector('#maximize-app-button');
 let dbValues = []
-
 ipcRenderer.on("initApp", (err, todos) => {
     todos.forEach(todo => {
         DrawRow(todo)
+        dbValues.push(todo)
     })
 })
 
@@ -20,13 +20,13 @@ ipcRenderer.on('todo:addItem', (e, todo) => {
 
 ipcRenderer.on("editTodo:save", (err, data) => {
     if (data) {
-        console.log(data)
-        if (document.getAttribute("id") === data.id) {
-            let editRow = document.querySelectorAll('p');
-            editRow.innerText = data.text;
-            feather.replace()
-            CheckToDoCount()
-        }
+        console.log(data.id)
+        let editRow = document.getElementById(data.id)
+        let p = editRow.getElementsByClassName("w-100")
+        p.innerText = data.text;
+        console.log(p)
+        feather.replace()
+        CheckToDoCount()
     }
 })
 
