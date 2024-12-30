@@ -5,26 +5,25 @@ const {ipcRenderer, dialog} = electron
 let closeAppButton = document.querySelector('#close-app-button');
 let minimizeAppButton = document.querySelector('#minimize-app-button');
 let maximizeAppButton = document.querySelector('#maximize-app-button');
-let dbValues = []
+let isReloaded = false;
+CheckToDoCount();
 ipcRenderer.on("initApp", (err, todos) => {
+
     todos.forEach(todo => {
         DrawRow(todo)
-        dbValues.push(todo)
     })
+        CheckToDoCount();
 })
 
-CheckToDoCount();
 ipcRenderer.on('todo:addItem', (e, todo) => {
     DrawRow(todo)
 })
 
 ipcRenderer.on("editTodo:save", (err, data) => {
     if (data) {
-        console.log(data.id)
         let editRow = document.getElementById(data.id)
         let p = editRow.getElementsByClassName("w-100")
         p.innerText = data.text;
-        console.log(p)
         feather.replace()
         CheckToDoCount()
     }

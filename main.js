@@ -86,6 +86,7 @@ app.on("ready", () => {
     ipcMain.on("editTodo:save", (err, data) => {
         UpdateDODOListOnDb(data);
         FetchDODOListFromDb("initApp")
+        mainWindow.reload()
     })
 
     ipcMain.on("quitApp", () => {
